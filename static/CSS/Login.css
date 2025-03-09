@@ -46,11 +46,11 @@ form {
     width: 300px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza os inputs */
+    align-items: center;
 }
 
 label {
-    width: 100%; /* Mantém o label alinhado à esquerda */
+    width: 100%;
     margin-bottom: 5px;
     font-weight: bold;
     color: #333;
