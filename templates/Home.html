@@ -1,0 +1,98 @@
+{% extends 'Base.html' %}
+
+{% block conteudo %}
+
+<title>Filtro</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/Home.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<h1>Selecione os Filtros</h1>
+
+    <form method="POST">
+        <!-- Filtro de Mercado -->
+        <label for="mercado">Mercado:</label>
+        <select name="mercado" id="mercado">
+            <option value="">Selecione o Mercado</option>
+            {% for mercado in mercados %}
+                <option value="{{ mercado }}">{{ mercado }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Filtro de Ano -->
+        <label for="ano">Ano:</label>
+        <select name="ano" id="ano">
+            <option value="">Selecione o Ano</option>
+            {% for ano in anos %}
+                <option value="{{ ano }}">{{ ano }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Filtro de Mês -->
+        <label for="mes">Mês:</label>
+        <select name="mes" id="mes">
+            <option value="">Selecione o Mês</option>
+            {% for mes in meses %}
+                <option value="{{ mes }}">{{ mes }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <h2>Dados Filtrados</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Mercado</th>
+                <th>Ano</th>
+                <th>Mês</th>
+                <th>RPK</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dado in dados %}
+                <tr>
+                    <td>{{ dado.id }}</td>
+                    <td>{{ dado.mercado }}</td>
+                    <td>{{ dado.ano }}</td>
+                    <td>{{ dado.mes }}</td>
+                    <td>{{ dado.rpk }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            // Quando o mercado for alterado
+            $('#mercado').change(function() {
+                var mercadoSelecionado = $(this).val();
+
+                if (mercadoSelecionado) {
+                    // Requisição AJAX para buscar os anos e meses para o mercado selecionado
+                    $.get('/get_anos_e_meses', { mercado: mercadoSelecionado }, function(data) {
+                        // Limpar os campos de ano e mês
+                        $('#ano').empty();
+                        $('#mes').empty();
+
+                        // Adicionar opção padrão
+                        $('#ano').append('<option value="">Selecione o Ano</option>');
+                        $('#mes').append('<option value="">Selecione o Mês</option>');
+
+                        // Adicionar os anos e meses recebidos
+                        data.anos.forEach(function(ano) {
+                            $('#ano').append('<option value="' + ano + '">' + ano + '</option>');
+                        });
+                        data.meses.forEach(function(mes) {
+                            $('#mes').append('<option value="' + mes + '">' + mes + '</option>');
+                        });
+                    });
+                } else {
+                    // Se nenhum mercado for selecionado, limpe os filtros de ano e mês
+                    $('#ano').empty().append('<option value="">Selecione o Ano</option>');
+                    $('#mes').empty().append('<option value="">Selecione o Mês</option>');
+                }
+            });
+        });
+    </script>
+{% endblock %}

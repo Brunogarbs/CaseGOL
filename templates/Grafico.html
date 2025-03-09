@@ -1,0 +1,106 @@
+{% extends 'Base.html' %}
+
+{% block conteudo %}
+    <title>Gráfico</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Grafico.css') }}">
+
+    <body>
+        <h1>Gráfico de RPK por Data</h1>
+
+        <form method="POST">
+            <!-- Filtro de Mercado -->
+            <label for="mercado">Mercado:</label>
+            <select name="mercado" id="mercado">
+                <option value="">Selecione o Mercado</option>
+                {% for mercado in mercados %}
+                    <option value="{{ mercado }}">{{ mercado }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Filtro de Data Início -->
+            <label for="data_inicio">Data Início:</label>
+            <select name="data_inicio" id="data_inicio">
+                <option value="">Selecione a Data de Início</option>
+            </select>
+
+            <!-- Filtro de Data Fim -->
+            <label for="data_fim">Data Fim:</label>
+            <select name="data_fim" id="data_fim">
+                <option value="">Selecione a Data de Fim</option>
+            </select>
+
+            <button type="submit">Filtrar</button>
+        </form>
+
+        <h2>Dados Filtrados</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Mercado</th>
+                    <th>Ano</th>
+                    <th>Mês</th>
+                    <th>RPK</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dado in dados %}
+                    <tr>
+                        <td>{{ dado.id }}</td>
+                        <td>{{ dado.mercado }}</td>
+                        <td>{{ dado.ano }}</td>
+                        <td>{{ dado.mes }}</td>
+                        <td>{{ dado.rpk }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if img_base64 %}
+            <h2>Gráfico de RPK por Data</h2>
+            <img src="data:image/png;base64,{{ img_base64 }}" alt="Gráfico RPK">
+        {% else %}
+            <p>Selecione os filtros e clique em "Filtrar" para exibir o gráfico.</p>
+        {% endif %}
+
+        <script>
+            $(document).ready(function() {
+                // Carrega as datas disponíveis ao selecionar o mercado
+                $('#mercado').change(function() {
+                    var mercado = $(this).val();
+                    
+                    $('#data_inicio, #data_fim').empty().append('<option value="">Selecione a Data</option>');
+
+                    if (mercado) {
+                        $.ajax({
+                            url: '/get_datas_disponiveis',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ mercado: mercado }),
+                            success: function(datas) {
+                                datas.forEach(function(data) {
+                                    $('#data_inicio, #data_fim').append('<option value="' + data + '">' + data + '</option>');
+                                });
+                            }
+                        });
+                    }
+                });
+
+                // Garante que a Data Fim seja maior que a Data Início
+                $('#data_inicio').change(function() {
+                    var dataInicio = $(this).val();
+                    
+                    $('#data_fim option').each(function() {
+                        var dataFim = $(this).val();
+                        if (dataFim && dataFim < dataInicio) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+{% endblock %}

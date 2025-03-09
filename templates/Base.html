@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/Base.css') }}">
+</head>
+<body>
+    <header>
+        <a href="/Home">Filtro</a>
+        <a href="/Grafico">Grafico RPK</a>
+        <a href="/Logout">Logout</a>
+    </header>
+    {% block conteudo %}
+        
+    {% endblock %}
+    
+</body>
+</html>
