@@ -69,7 +69,7 @@
                 var mercadoSelecionado = $(this).val();
 
                 if (mercadoSelecionado) {
-                    // Requisição AJAX para buscar os anos e meses para o mercado selecionado
+                    // Buscar os anos e meses para o mercado selecionado
                     $.get('/get_anos_e_meses', { mercado: mercadoSelecionado }, function(data) {
                         // Limpar os campos de ano e mês
                         $('#ano').empty();
