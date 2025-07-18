@@ -50,18 +50,6 @@ flask run
 ```bash
 http://localhost:5000
 ```
-## 📁 Estrutura do Projeto
-
-CaseGOL/
-│
-├── app.py                 # Arquivo principal da aplicação Flask
-├── templates/             # HTMLs com Jinja2
-│   └── index.html
-├── static/                # CSS/JS estáticos
-├── charts/                # Geração de gráficos
-├── data/                  # Arquivos de dados (CSV, JSON, etc.)
-├── requirements.txt       # Dependências do projeto
-└── README.md              # Este arquivo
 ## 📌 Considerações
 Este projeto demonstrou a capacidade de:
 
